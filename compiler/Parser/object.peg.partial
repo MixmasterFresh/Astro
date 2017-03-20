@@ -1,0 +1,11 @@
+object <- object_definition list_of_owned_statements END
+
+object_definition <- CLASS ID inheritance?
+
+inheritance <- LESS_THAN ID
+
+list_of_owned_statements <- owned_statement*
+
+owned_statement <- (domain / statement)*
+
+domain <- PUBLIC / PRIVATE / PROTECTED

@@ -1,0 +1,260 @@
+
+//##############################################################################
+//##############################################################################
+// TOKENS
+//##############################################################################
+//##############################################################################
+
+////////////////////////////////////////////////////////////////////////////////
+// Words
+////////////////////////////////////////////////////////////////////////////////
+AS <- 'as' sp
+AWAIT <- 'await' sp
+BOUNDS <- 'bounds' sp
+CASE <- 'case' sp
+DEFAULT <- 'default' sp
+DEFER <- 'defer' sp
+DO <- 'do' sp
+END <- 'end' sp
+FINALLY <- 'finally'
+FROM <- 'from' sp
+GO <- 'go' sp
+GLOBAL <- 'global' sp
+GUARD <- 'guard' sp
+IN <- 'in' sp
+ITERATOR <- 'iterator' sp
+LAMBDA <- 'lambda' sp
+MAP <- 'map' sp
+MATCH <- 'match' sp
+MAYBE <- 'maybe' sp
+NEW <- 'new' sp
+NIL <- 'nil' sp
+PRIVATE <- 'private' sp
+PROTECTED <- 'protected' sp
+PUBLIC <- 'public' sp
+REGEX <- 'regex' sp
+REQUIRE <- 'require' sp
+RESOURCE <- '&'
+RETURN <- 'return' sp
+RETURNS <- 'returns' sp
+TO <- 'to' sp
+TYPE <- 'type' sp
+UNWRAP <- 'unwrap' sp
+YIELD <- 'yield' sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+// If Related Words
+////////////////////////////////////////////////////////////////////////////////
+ELSE <- 'else' sp
+ELSIF <- 'elsif' sp
+IF <- 'if' sp
+UNLESS <- 'unless' sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Concurrency Related Words
+////////////////////////////////////////////////////////////////////////////////
+CHAN <- 'chan' sp
+PID <- 'pid' sp
+PID_GROUP <- 'pid_group' sp
+RECEIVE <- 'receive' sp
+SEND <- 'send' sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Definition Related Words
+////////////////////////////////////////////////////////////////////////////////
+ASYNC <- 'async' sp
+DEF <- 'def' sp
+INLINE <- 'inline' sp
+PURE <- 'pure' sp
+UNPURE <- 'unpure' sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Loop Related Words
+////////////////////////////////////////////////////////////////////////////////
+BREAK <- 'break' sp
+CONTINUE <- 'continue' sp
+FOR <- 'for' sp
+GOTO <- 'goto' sp
+UNTIL <- 'until' sp
+WHILE <- 'while' sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Numbers
+////////////////////////////////////////////////////////////////////////////////
+NUMBER <- INTEGER / DECIMAL
+INTEGER <- <[0-9]+> sp
+DECIMAL <- <[0-9]+(\.[0-9]+([Ee][0-9])?/([Ee][0-9]))> 'f'? sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Strings
+////////////////////////////////////////////////////////////////////////////////
+DOUBLE_QUOTE_STRING <- '\"' <([^'\"'] / STRING_INSERTION / '\\' '\"')*> '\"' sp
+SINGLE_QUOTE_STRING <- '\'' <([^'\''] / '\\' '\'')*> '\'' sp
+STRING_INSERTION <- '#{' sp expression sp '}'
+STRING_LITERAL <- SINGLE_QUOTE_STRING / DOUBLE_QUOTE_STRING
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Other Regexes
+////////////////////////////////////////////////////////////////////////////////
+COMMENT_NONSENSE <- [^'\n']*
+MULTILINE_COMMENT_NONSENSE <- [^COMMENT_CLOSE]
+NAME <- <[[a-z]][[a-z0-9_\?\!]]*> sp
+REGEX <- '/' <([^'`'] / '\\' '`')*> '/' sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Reserved Types
+////////////////////////////////////////////////////////////////////////////////
+INT <- 'int'
+INT32 <- 'int32'
+INT64 <- 'int64'
+DOUBLE <- 'double'
+FLOAT <- 'float'
+BYTE <- 'byte'
+CHAR <- 'char'
+BOOL <- 'bool'
+SYMBOL <- 'symbol'
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Comparison Symbols
+////////////////////////////////////////////////////////////////////////////////
+BITWISE_AND <- '&' sp
+AND <- '&&' sp
+EQUALS_EQUALS <- '==' sp
+MATCH <- '=~' sp
+APPROX_EQUALS <- '=[' sp NUMBER? ']~' sp
+GREATER_THAN <- '>' sp
+GREATER_THAN_EQ <- '>=' sp
+LESS_THAN <- '<' sp
+LESS_THAN_EQ <- '<=' sp
+BITWISE_NAND <- '!&' sp
+NAND <- '!&&' sp
+BITWISE_NOT <- '~' sp
+NOT <- '!' sp
+NOT_EQUALS <- '!=' sp
+BITWISE_NOR <- '!|' sp
+NOR <- '!||' sp
+BITWISE_OR <- '|' sp
+OR <- '||' sp
+BITWISE_XOR <- '~' sp
+XOR <- '~~' sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Arithmetic Symbols
+////////////////////////////////////////////////////////////////////////////////
+DIVIDE <- '/' sp
+EXPONENT <- '^' sp
+MINUS <- '-' sp
+MOD <- '%' sp
+PLUS <- '+' sp
+MULTIPLY <- '*' sp
+LEFT_SHIFT <- '<<' sp
+RIGHT_SHIFT <- '>>' sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Prefix Symbols
+////////////////////////////////////////////////////////////////////////////////
+PREFIX_SYMBOLS <- (ADDRESS 
+                 / CLASS_SCOPING
+                 / FUNCTION_PASS
+                 / REFERENCE
+                 / RECEIVE_ARROW 
+                 / MINUS_MINUS 
+                 / PLUS_PLUS) sp
+ADDRESS <- '&'
+CLASS_SCOPING <- '@'
+FUNCTION_ESCAPE <- '\\'
+PARAM_COUNT <- '$'
+RECEIVE_ARROW <- '<-'
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Postfix Symbols
+////////////////////////////////////////////////////////////////////////////////
+POSTFIX_SYMBOL <- (MINUS_MINUS / PLUS_PLUS) sp
+MINUS_MINUS <- '--'
+PLUS_PLUS <- '++'
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Other Symbols
+////////////////////////////////////////////////////////////////////////////////
+COMMENT_MARKER <- '#'
+COMMENT_OPEN <- '/#'
+COMMENT_CLOSE <- '#/' sp
+COMMA <- ','
+DOT <- '.'
+COLON <- ':'
+COLON_COLON '::'
+FORWARD <- '|>' sp
+QUESTION_MARK <- '?' sp
+SEMICOLON <- ';' sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Assignment Symbols
+////////////////////////////////////////////////////////////////////////////////
+ASSIGNMENT_SYMBOL <- (BITWISE_AND_EQUALS
+                    / BITWISE_NAND_EQUALS
+                    / DIV_EQUALS
+                    / DIV_EQUALS
+                    / EXPONENT_EQUALS
+                    / LEFT_SHIFT_EQUALS
+                    / MINUS_EQUALS
+                    / MOD_EQUALS
+                    / OR_EQUALS
+                    / BITWISE_OR_EQUALS
+                    / BITWISE_NOR_EQUALS
+                    / PLUS_EQUALS
+                    / RIGHT_SHIFT_EQUALS
+                    / STANDARD_EQUAL
+                    / TIMES_EQUALS
+                    / BITWISE_XOR_EQUALS) sp
+BITWISE_AND_EQUALS <- '&='
+BITWISE_NAND_EQUALS <- '!&='
+DIV_EQUALS <- '/='
+EXPONENT_EQUALS <- '^='
+LEFT_SHIFT_EQUALS <- '<<='
+MINUS_EQUALS <- '-='
+MOD_EQUALS <- '%='
+BITWISE_OR_EQUALS <- '|='
+OR_EQUALS <- '||='
+BITWISE_NOR_EQUALS <- '!|='
+PLUS_EQUALS <- '+='
+RIGHT_SHIFT_EQUALS <- '>>='
+STANDARD_EQUALS <- '='
+TIMES_EQUALS <- '*='
+BITWISE_XOR_EQUALS <- '~='
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Brackets and Braces
+////////////////////////////////////////////////////////////////////////////////
+CLOSE_BRACE <- ']' sp
+CLOSE_BRACKET <- '}' sp
+CLOSE_PAREN <- ')' sp
+OPEN_BRACE <- '[' sp
+OPEN_BRACKET <- '{' sp
+OPEN_PAREN <- '(' sp
+
+
+////////////////////////////////////////////////////////////////////////////////
+//Spaces and newlines
+////////////////////////////////////////////////////////////////////////////////
+sp <- (' ' / '\t' / '\n')*
+NEWLINE <- &(('\n')(' '/ '\t')*) /
+           (';')(' '/ '\t' / '\n')* 
+NO_SPACE <- !sp
+NO_NEWLINE <- !NEWLINE
+
+

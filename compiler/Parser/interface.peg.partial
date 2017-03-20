@@ -1,0 +1,11 @@
+interface <- INTERFACE NAME interface_rules END
+
+interface_rules <- (interface_rule (COMMA interface_rule)*)* 
+
+interface_rule <- variable / function
+
+variable <- optional_type NAME
+
+function <- NAME argument_list
+
+
