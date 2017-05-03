@@ -3,19 +3,27 @@ package parser
 type Astro Peg {
 }
 
-// the main goal of the compiler
-goal <- (sp / newline) list_of_statements !.
+# the main goal of the compiler
+goal <- (sp / NEWLINE) list_of_statements !.
+
+list_of_outer_statements <- (outer_statement (NEWLINE (outer_statement)))?
+outer_statement <- (definition / require / object / interface) / outer_statement
+
 
 list_of_statements <- (statement (NEWLINE statement)*)?
-statement <- (definition / require / object / expression / interface / block / return / yield / label / goto / type_definition)? statement_condition comment?
+statement <- (definition / require / object / expression / interface / block / return / yield / label / goto / type_definition) statement_condition?
 
-statement_condition <- if_condition / unless_condition / while_condition / for_condition
+statement_condition <- NO_NEWLINE (if_condition / unless_condition / while_condition / until_condition / for_condition)
 
-comment <- single_line_comment / multiline_comment
-single_line_comment <- COMMENT_MARKER COMMENT_NONSENSE
-multiline_comment <- COMMENT_OPEN MULTILINE_COMMENT_NONSENSE COMMENT_CLOSE
+if_condition <- standard_if / contains_if
+unless_condition <- UNLESS expression
+while_condition <- WHILE expression
+until_condition <- UNTIL expression
+for_condition <- (FOR / FOREACH) name_list ((IN / FROM) expression)?
 
-yield <- YIELD expression 
+
+
+yield <- YIELD expression
 
 label <- symbol_key
 
@@ -33,20 +41,20 @@ list_of_types <- OPEN_BRACKET type NAME (COMMA type NAME)* CLOSE_BRACKET
 
 optional_type <- type?
 
-type <- (RESOURCE / MAYBE / GUARD)* (number_types 
-        / defined_type 
-        / other_types 
-        / map_type 
-        / array_type 
+type <- (RESOURCE / MAYBE / GUARD)* (number_types
+        / defined_type
+        / other_types
+        / map_type
+        / array_type
         / chan_type
-        / pid_types) // res maybe guard int thing = some_sketchy_function
+        / pid_types) # res maybe guard int thing = some_sketchy_function
 
 number_types <- INT / INT64 / INT32 / FLOAT / DOUBLE
 other_types <- STRING / CHAR / BYTE / BOOL / SYMBOL
 defined_type <- dot_expression
-map_type <- MAP OPEN_BRACE sp type sp COLON sp type sp CLOSE_BRACE // map[int:int]
-array_type <- type OPEN_BRACE CLOSE_BRACE // int[]
-chan_type <- CHAN sp optional_type // chan int
+map_type <- MAP OPEN_BRACE sp type sp COLON sp type sp CLOSE_BRACE # map[int:int]
+array_type <- type OPEN_BRACE CLOSE_BRACE # int[]
+chan_type <- CHAN sp optional_type # chan int
 pid_types <- PID / PID_GROUP
 
 namespace <- NAME (COLON_COLON NAME)+

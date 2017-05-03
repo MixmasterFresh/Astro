@@ -1,58 +1,58 @@
 
-//##############################################################################
-//##############################################################################
-// EXPRESSIONS
-//##############################################################################
-//##############################################################################
+################################################################################
+################################################################################
+## EXPRESSIONS
+################################################################################
+################################################################################
 
 expression_list <- expression (COMMA expression)*
 
-expression <- assignment / ternary_expression 
+expression <- assignment / ternary_expression
 
-assignment <- GLOBAL? optional_type variable_list ASSIGNMENT_SYMBOL expression_list // Need to add assign lists e.g. a,b,c = 1 or a,b,c = 1,2,3
+assignment <- GLOBAL? optional_type variable_list ASSIGNMENT_SYMBOL expression_list ## Need to add assign lists e.g. a,b,c = 1 or a,b,c = 1,2,3
 
 ternary_expression <- passing_expression (QUESTION_MARK expression COLON expression)?
 
 passing_expression <- non_passing_expression (FORWARD function)*
 
-non_ternary_expression <- boolean_expression / concurrency_expression
+non_passing_expression <- boolean_expression / concurrency_expression
 
 concurrency_expression <- go_expression / send_expression / receive_expression
 
 boolean_expression <- or_expression
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Passing Functions
-////////////////////////////////////////////////////////////////////////////////
+################################################################################
+## Passing Functions
+################################################################################
 function <- lambda / raw_function
 
 lambda <- implicit_lambda / explicit_lambda
-implicit_lambda <- OPEN_BRACKET function_type_list return_type? list_of_in_def_statements CLOSE_BRACKET
-explicit_lambda <- LAMBDA function_type_list return_type? list_of_in_def_statements END
-function_type_list <- OPEN_PAREN (function_type (COMMA function_type)*)? CLOSE_PAREN
+implicit_lambda <- OPEN_BRACKET function_type_list return_type? list_of_statements CLOSE_BRACKET
+explicit_lambda <- LAMBDA function_type_list return_type? list_of_statements END
+function_type_list <- OPEN_PAREN (parameter (COMMA parameter)*)? CLOSE_PAREN
 
 raw_function <- no_parens_raw_function / parens_raw_function
-no_parens_raw_function <- FUNCTION_ESCAPE dot_expression NO_NEWLINE (param_count INTEGER / type)?
+no_parens_raw_function <- FUNCTION_ESCAPE dot_expression NO_NEWLINE (PARAM_COUNT INTEGER / type)?
 parens_raw_function <- FUNCTION_ESCAPE dot_expression OPEN_PAREN raw_function_parameter_list? CLOSE_PAREN
-raw_function_parameter_list <- (param_count INTEGER / type) (COMMA (param_count INTEGER / type))*
+raw_function_parameter_list <- (PARAM_COUNT INTEGER / type) (COMMA (PARAM_COUNT INTEGER / type))*
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Concurrency Expressions
-////////////////////////////////////////////////////////////////////////////////
+################################################################################
+## Concurrency Expressions
+################################################################################
 go_expression <- GO function_call (IN expression)?
 send_expression <- SEND expression TO expression
-receive_expression <- RECIEVE FROM expression
+receive_expression <- RECEIVE FROM expression
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Boolean Expressions
-////////////////////////////////////////////////////////////////////////////////
+################################################################################
+## Boolean Expressions
+################################################################################
 or_expression <- and_expression ((OR / NOR / XOR) and_expression)*
 and_expression <- bitwise_expression ((AND / NAND) bitwise_expression)*
-comp_expression <- equals_expression (( LESS_THAN_EQUALS
-                                      / GREATER_THAN_EQUALS
+comp_expression <- equals_expression (( LESS_THAN_EQ
+                                      / GREATER_THAN_EQ
                                       / LESS_THAN
                                       / GREATER_THAN) equals_expression)*
 equals_expression <- bitshift ((EQUALS_EQUALS
@@ -61,33 +61,33 @@ equals_expression <- bitshift ((EQUALS_EQUALS
                               / APPROX_EQUALS) bitshift)*
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Bitwise Expressions
-////////////////////////////////////////////////////////////////////////////////
+################################################################################
+## Bitwise Expressions
+################################################################################
 bitwise_expression <- bitwise_xor ((BITWISE_OR / BITWISE_NOR) bitwise_xor)*
 bitwise_xor <- bitwise_and (BITWISE_XOR bitwise_and)*
 bitwise_and <- comp_expression ((BITWISE_AND / BITWISE_NAND) comp_expression)*
 bitshift <- arithmetic_expression ((LEFT_SHIFT / RIGHT_SHIFT) arithmetic_expression)*
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Arithmetic Expressions
-////////////////////////////////////////////////////////////////////////////////
+################################################################################
+## Arithmetic Expressions
+################################################################################
 arithmetic_expression <- mult_expression ((EXPONENT) mult_expression)*
 mult_expression <- add_expression ((DIVIDE / MULTIPLY / MOD) add_expression)*
 add_expression <- prefix_expression ((PLUS / MINUS) prefix_expression)*
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Unary Expressions
-////////////////////////////////////////////////////////////////////////////////
-prefix_expression <- (PREFIX_SYMBOL)* postfix_expression
-postfix_expression <- primary_expression (POSTFIX_SYMBOL)*
+################################################################################
+## Unary Expressions
+################################################################################
+prefix_expression <- (PREFIX_SYMBOLS)* postfix_expression
+postfix_expression <- primary_expression (POSTFIX_SYMBOL / OPEN_BRACE expression CLOSE_BRACE)*
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Primary Expressions
-////////////////////////////////////////////////////////////////////////////////
+################################################################################
+## Primary Expressions
+################################################################################
 primary_expression <- dot_expression
                     / function
                     / REGEX
@@ -99,28 +99,28 @@ primary_expression <- dot_expression
                     / STRING_LITERAL
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Literals
-////////////////////////////////////////////////////////////////////////////////
+################################################################################
+## Literals
+################################################################################
 array_init <- empty_array_init / literal_array_init
 empty_array_init <- optional_type OPEN_BRACE expression CLOSE_BRACE
 literal_array_init <- optional_type OPEN_BRACE expression_list CLOSE_BRACE
 
 map_init <- empty_map_init / literal_map_init
 empty_map_init <- OPEN_BRACKET (optional_type COLON optional_type)? CLOSE_BRACKET
-literal_map_init <- empty_map_init? OPEN_BRACE map_expression_list CLOSE_BRACE 
+literal_map_init <- empty_map_init? OPEN_BRACE map_expression_list CLOSE_BRACE
 map_expression_list <- (map_expression (COMMA map_expression)*)?
 map_expression <- (symbol_key / expression COLON) expression
 
-chan_init <- CHAN (OPEN_BRACE expression CLOSE_BRACE)? optional_type // chan[3] int
+chan_init <- CHAN (OPEN_BRACE expression CLOSE_BRACE)? optional_type ## chan[3] int
 
 symbol_literal <- COLON NO_SPACE NAME
 symbol_key <- NAME NO_SPACE COLON
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Dot Expression
-////////////////////////////////////////////////////////////////////////////////
+################################################################################
+## Dot Expression
+################################################################################
 dot_expression <- variable / function_call
 dot_expression_prefix <- namespace (DOT NAME)*
 variable <- dot_expression_prefix
@@ -128,6 +128,6 @@ function_call <- dot_expression_prefix (no_parens_call / parens_call)
 no_parens_call <- NO_NEWLINE expression
 parens_call <- OPEN_PAREN ((expression_list / option) options)? CLOSE_PAREN
 options <- (COMMA option)*
-option <- sybol_key expression
+option <- symbol_key expression
 variable_list <- variable (COMMA variable)*
 

@@ -1,8 +1,13 @@
 package parser
 
-//go:generate cat *.peg.partial > astro.peg
-//go:generate peg astro.peg
+import "log"
 
-func Parse() {
-  
+func Parse(buffer string) {
+	astro := &Astro{Buffer: string(buffer)}
+	astro.Init()
+
+	if err := astro.Parse(); err != nil {
+		log.Fatal(err)
+	}
+	astro.PrintSyntaxTree()
 }

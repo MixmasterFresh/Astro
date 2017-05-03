@@ -1,8 +1,8 @@
 object <- object_definition list_of_owned_statements END
 
-object_definition <- CLASS ID inheritance?
+object_definition <- CLASS NAME inheritance?
 
-inheritance <- LESS_THAN ID
+inheritance <- LESS_THAN NAME
 
 list_of_owned_statements <- owned_statement*
 

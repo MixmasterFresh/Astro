@@ -1,26 +1,41 @@
 
-//##############################################################################
-//##############################################################################
-// BLOCKS
-//##############################################################################
-//##############################################################################
+################################################################################
+################################################################################
+## BLOCKS
+################################################################################
+################################################################################
 
-block <- loop / receive / match / if / unless / unwrap
+block <- loop / receive_block / match / if / unless / unwrap
 
-loop <- for_loop / while_loop
-for_loop <- 
-while_loop <- 
-until <- 
+loop <- for_loop / while_loop / until_loop
 
-receive <- RECEIVE NAME from_list END
-from_list <- 
+for_loop <- legacy_for_loop / enhanced_for_loop / forever_loop
+legacy_for_loop <- FOR for_conditions list_of_statements END
+for_conditions <- (OPEN_PAREN inner_for_conditions CLOSE_PAREN) / inner_for_conditions
+inner_for_conditions <- expression SEMICOLON expression SEMICOLON expression
+enhanced_for_loop <- (FOR / FOREACH) name_list ((IN / FROM) expression)? list_of_statements END
+forever_loop <- FOREVER list_of_statements END
+name_list <- name (COMMA name)*
+name <- NAME / DONT_CARE
+
+
+while_loop <- WHILE expression list_of_statements END
+until_loop <- UNTIL expression list_of_statements END
+
+receive_block <- RECEIVE NAME from_list END
+from_list <- ((CASE type COLON / FROM expression COLON) list_of_statements)+
 
 match <- MATCH dot_expression case_list END
-case_list <-
+case_list <- (case)*
+case <- CASE (primary_expression / type) COLON list_of_statements / DEFAULT COLON list_of_statements
 
-if <- IF EXPRESSION elsif_statements ELSE list_of_statements END
-elsif_statements <-
+if <- (standard_if / contains_if) if_body
+standard_if <- IF expression
+contains_if <- IF expression IN expression
+if_body <- list_of_statements elsif_statements? (ELSE list_of_statements)?
+elsif_statements <- (ELSIF expression (IN expression) list_of_statements)?
 
-unless <- UNLESS EXPRESSION list_of_statements ELSE list_of_statements END
+unless <- UNLESS expression list_of_statements ELSE list_of_statements END
 
-unwrap <-
+unwrap <- UNWRAP dot_expression list_of_statements except_list END
+except_list <- (EXCEPT type NAME COLON list_of_statements)*

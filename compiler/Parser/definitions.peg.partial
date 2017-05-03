@@ -1,11 +1,11 @@
 definition <- standard_definition
 
-standard_definition <- (DEF / function_modifiers) ID argument_list list_of_statements return_type? END
+standard_definition <- (DEF / function_modifiers) NAME argument_list list_of_statements return_type? END
 
-argument_list <- OPEN_PARENS (argument (COMMA argument)*)? CLOSE_PARENS
+argument_list <- OPEN_PAREN (argument (COMMA argument)*)? CLOSE_PAREN
 argument <- (class_parameter / parameter)
 class_parameter <- CLASS_SCOPING variable
-parameter <- optional_type variable (STANDARD_EQUALS expression)? 
+parameter <- optional_type variable (STANDARD_EQUALS expression)?
 
 function_modifiers <- function_modifier+
 
